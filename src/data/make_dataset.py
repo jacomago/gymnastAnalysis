@@ -2,8 +2,10 @@
 import os
 import click
 import logging
+import scrapy
+from scrapy.crawler import CrawlerProcess
 from dotenv import find_dotenv, load_dotenv
-
+from gymter_spider import GymnastSiteSpider
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))
@@ -15,6 +17,16 @@ def main(input_filepath, output_filepath):
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
 
+    process = CrawlerProcess({
+        'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
+        'FEED_FORMAT': 'json',
+        'FEED_URI': output_filepath+"/%(name)s/%(time)s.json",
+        'ROBOTSTXT_OBEY' :True,
+        'LOG_LEVEL' : 'INFO'
+    })
+
+    process.crawl(GymnastSiteSpider)
+    process.start() # the script will block here until the crawling is finished
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
