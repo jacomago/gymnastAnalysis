@@ -22,7 +22,8 @@ def main(input_filepath, output_filepath):
         'FEED_FORMAT': 'json',
         'FEED_URI': output_filepath+"/%(name)s/%(time)s.json",
         'ROBOTSTXT_OBEY' :True,
-        'LOG_LEVEL' : 'INFO'
+        'LOG_LEVEL' : logging.INFO,
+        'DOWNLOAD_DELAY':3.0
     })
 
     process.crawl(GymnastSiteSpider)
